@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Art Space</string>
+    <string name="art1_author">Antonello da Messina</string>
+    <string name="art1_title">St. Jerome in His Study</string>
+    <string name="art1_year">1474</string>
+    <string name="art2_author">Andrea Mantegna</string>
+    <string name="art2_title">Lamentation of Christ</string>
+    <string name="art2_year">1480</string>
+    <string name="art3_author">Pietro Perugino</string>
+    <string name="art3_title">Delivery of the Keys</string>
+    <string name="art3_year">1481–1482</string>
 </resources>
