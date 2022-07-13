@@ -11,12 +11,14 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -49,21 +51,27 @@ class MainActivity : ComponentActivity() {
 // Row is horizontal
 
 @Composable
-fun PrevNextButtons(modifier: Modifier = Modifier) {
-
+fun PrevNextButtons(
+    modifier: Modifier = Modifier,
+    value: Int,
+    onValueChangeIncrease: (Int) -> Unit,
+    onValueChangeDecrease: (Int) -> Unit
+) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(20.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         Button(
-            onClick = {},
+            onClick = {onValueChangeDecrease.invoke(value)},
             modifier = modifier.width(100.dp)
         ) {
             Text(text = "Previous")
         }
 
         Button(
-            onClick = {},
+            onClick = {onValueChangeIncrease.invoke(value)},
             modifier = modifier.width(100.dp)
         ) {
             Text(text = "Next")
@@ -74,18 +82,22 @@ fun PrevNextButtons(modifier: Modifier = Modifier) {
 // create composable for art
 @Composable
 fun ArtView(
-    painter: Painter = painterResource(id = R.drawable.art2),
+    painter: Painter = painterResource(id = R.drawable.art3),
     title:String = "title"
 ) {
     Surface(
-        modifier = Modifier.padding(40.dp),
+        modifier = Modifier
+            .height(500.dp)
+            .padding(20.dp)
+            .wrapContentHeight(Alignment.CenterVertically),
         elevation = 12.dp,
         border = BorderStroke(width = 3.dp, color = Color.Gray)
     ) {
         Image(
             painter = painter,
             contentDescription = title,
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
+            contentScale = ContentScale.FillBounds
         )
     }
 }
@@ -105,7 +117,7 @@ fun CaptionView(
     ) {
         Column(
             modifier = Modifier
-                .padding(11.dp),
+                .padding(11.dp)
         ) {
             // Art title
             Text(
@@ -144,15 +156,61 @@ fun CaptionView(
 @Composable
 fun MainPreview() {
     // change the index
+    var idx by remember { mutableStateOf(1) }
+
+    val image: Painter = when (idx) {
+        1 -> painterResource(R.drawable.art1)
+        2 -> painterResource(R.drawable.art2)
+        3 -> painterResource(R.drawable.art3)
+        else -> painterResource(R.drawable.art1)
+    }
+
+    val title: String = when (idx) {
+        1 -> stringResource(id = R.string.art1_title)
+        2 -> stringResource(id = R.string.art2_title)
+        3 -> stringResource(id = R.string.art3_title)
+        else -> "Title"
+    }
+
+    val author: String = when (idx) {
+        1 -> stringResource(id = R.string.art1_author)
+        2 -> stringResource(id = R.string.art2_author)
+        3 -> stringResource(id = R.string.art3_author)
+        else -> "author"
+    }
+
+    val year: String = when (idx) {
+        1 -> stringResource(id = R.string.art1_year)
+        2 -> stringResource(id = R.string.art2_year)
+        3 -> stringResource(id = R.string.art3_year)
+        else -> "Year"
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        ArtView()
-        CaptionView()
-        PrevNextButtons()
+        ArtView(painter = image, title = title)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentHeight(Alignment.Bottom),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CaptionView(title = title, author = author, year = year)
+            PrevNextButtons(value = idx, onValueChangeIncrease = {
+                idx = it + 1
+                if (idx == 4) {
+                    idx = 1
+                }
+            }) {
+                idx = it - 1
+                if (idx == 0) {
+                    idx = 3
+                }
+            }
+        }
     }
 }
 
