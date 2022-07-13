@@ -87,17 +87,20 @@ fun ArtView(
 ) {
     Surface(
         modifier = Modifier
-            .height(500.dp)
-            .padding(20.dp)
-            .wrapContentHeight(Alignment.CenterVertically),
+            .padding(10.dp)
+            .fillMaxWidth()
+            .height(500.dp),
         elevation = 12.dp,
-        border = BorderStroke(width = 3.dp, color = Color.Gray)
+        shape = RoundedCornerShape(5.dp),
+        border = BorderStroke(2.dp, Color.LightGray)
     ) {
         Image(
+            alignment = Alignment.Center,
             painter = painter,
             contentDescription = title,
-            modifier = Modifier.padding(20.dp),
-            contentScale = ContentScale.FillBounds
+            modifier = Modifier
+                .padding(20.dp),
+            contentScale = ContentScale.Fit
         )
     }
 }
